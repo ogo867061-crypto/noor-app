@@ -1,10 +1,21 @@
+
 {
+  "id": "/noor-app/",
   "name": "نور الإيمان",
-  "short_name": "نور الإيمان",
-  "start_url": "/",
+  "short_name": "نور",
+  "description": "تطبيق نور الإيمان للأذكار والطمأنينة",
+  "start_url": "/noor-app/",
+  "scope": "/noor-app/",
   "display": "standalone",
   "background_color": "#071b16",
   "theme_color": "#071b16",
   "lang": "ar",
-  "dir": "rtl"
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/noor-app/192_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
 }
