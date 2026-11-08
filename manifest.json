@@ -1,0 +1,10 @@
+{
+  "name": "نور الإيمان",
+  "short_name": "نور الإيمان",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071b16",
+  "theme_color": "#071b16",
+  "lang": "ar",
+  "dir": "rtl"
+}
