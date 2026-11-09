@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b16">
+<title>نور الإيمان</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#071b16;
+ color:#fff;
+ font-family:Tahoma,Arial;
+}
+header{
+ background:linear-gradient(135deg,#12634c,#092d23);
+ padding:28px 15px;
+ text-align:center;
+ border-radius:0 0 30px 30px;
+}
+header h1{color:#e9cb7b;font-size:29px}
+header p{color:#d0e4d9}
+#date{font-size:13px;color:#e9cb7b}
+
+.container{
+ max-width:650px;
+ margin:auto;
+ padding:15px;
+ padding-bottom:100px;
+}
+section{display:none}
+section.active{display:block}
+
+.card{
+ background:#12372c;
+ border:1px solid #285b48;
+ border-radius:20px;
+ padding:18px;
+ margin-bottom:15px;
+}
+h2{color:#e9cb7b;font-size:21px}
+p{line-height:2}
+.small{color:#b9d1c5;font-size:13px}
+
+button,select{
+ border:0;
+ border-radius:12px;
+ padding:13px;
+ font-size:15px;
+ font-weight:bold;
+}
+button{
+ background:#dfc174;
+ color:#14271d;
+ cursor:pointer;
+}
+button:active{opacity:.75}
+select{
+ width:100%;
+ background:#204638;
+ color:white;
+ margin:10px 0;
+ border:1px solid #527563;
+}
+
+nav{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ background:#102c23;
+ display:flex;
+ justify-content:space-around;
+ padding:9px 2px;
+ border-top:1px solid #345847;
+ z-index:10;
+}
+nav button{
+ background:none;
+ color:white;
+ font-size:11px;
+ padding:8px 3px;
+}
+nav button.active{color:#e9cb7b}
+
+.prayer{
+ display:flex;
+ justify-content:space-between;
+ padding:12px 5px;
+ border-bottom:1px solid #315748;
+}
+
+.ayah{
+ text-align:center;
+ font-size:21px;
+ line-height:2.2;
+ padding:15px 5px;
+ border-bottom:1px solid #315748;
+}
+
+.surah-title{
+ text-align:center;
+ color:#e9cb7b;
+ font-size:25px;
+}
+
+.big-circle{
+ width:175px;
+ height:175px;
+ border-radius:50%;
+ display:block;
+ margin:25px auto;
+ font-size:28px;
+ background:linear-gradient(145deg,#f2d991,#b58b39);
+ box-shadow:0 0 25px #b58b3944;
+}
+.counter{
+ font-size:55px;
+ color:#e9cb7b;
+ text-align:center;
+ margin:15px;
+}
+.center{text-align:center}
+.reset{
+ background:#b75c4e;
+ color:white;
+ margin-top:10px;
+}
+.zekr{
+ background:#204638;
+ border-radius:15px;
+ padding:15px;
+ margin:12px 0;
+ text-align:center;
+ line-height:2.2;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>☪ نور الإيمان</h1>
+<p>طمأنينة القلب بذكر الله</p>
+<div id="date"></div>
+</header>
+
+<div class="container">
+
+<!-- الرئيسية -->
+<section id="home" class="active">
+
+<div class="card">
+<h2>السلام عليكم ورحمة الله 🌿</h2>
+<p>مرحباً بك في تطبيق نور الإيمان.</p>
+<div class="center">
+﴿ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ ﴾
+</div>
+</div>
+
+<div class="card">
+<h2>🕌 مواقيت الصلاة</h2>
+<p class="small">عمّان - الأردن</p>
+<div id="prayers">جاري تحميل المواقيت...</div>
+<button onclick="loadPrayer()">تحديث المواقيت</button>
+</div>
+
+<div class="card">
+<h2>📖 القرآن الكريم</h2>
+<p>القرآن الكريم كاملاً مع جميع السور.</p>
+<button onclick="showTab('quran')">قراءة القرآن</button>
+</div>
+
+<div class="card">
+<h2>📿 المسبحة الإلكترونية</h2>
+<p>سبّح واستغفر الله.</p>
+<button onclick="showTab('tasbeeh')">افتح المسبحة</button>
+</div>
+
+</section>
+
+<!-- القرآن -->
+<section id="quran">
+<div class="card">
+<h2>📖 القرآن الكريم</h2>
+<select id="surahSelect" onchange="loadSurah()">
+<option value="">اختر السورة</option>
+</select>
+<div id="quranContent">جاري تجهيز القرآن...</div>
+</div>
+</section>
+
+<!-- الأدعية -->
+<section id="duas">
+<div class="card">
+<h2>🤲 الأدعية</h2>
+<div id="duaContent"></div>
+</div>
+</section>
+
+<!-- الأذكار -->
+<section id="adhkar">
+<div class="card">
+<h2>🌅 الأذكار اليومية</h2>
+<select id="zekrType" onchange="loadAdhkar()">
+<option value="morning">أذكار الصباح</option>
+<option value="evening">أذكار المساء</option>
+<option value="sleep">أذكار النوم</option>
+</select>
+<div id="zekrContent"></div>
+</div>
+</section>
+
+<!-- المسبحة -->
+<section id="tasbeeh">
+<div class="card center">
+<h2>📿 المسبحة الإلكترونية</h2>
+
+<select id="tasbeehType" onchange="changeTasbeeh()">
+<option>سبحان الله</option>
+<option>الحمد لله</option>
+<option>الله أكبر</option>
+<option>أستغفر الله</option>
+<option>لا إله إلا الله</option>
+<option>سبحان الله وبحمده</option>
+<option>اللهم صل وسلم على نبينا محمد</option>
+</select>
+
+<div class="small">عدد التسبيحات</div>
+
+<div class="counter" id="counter">0</div>
+
+<button class="big-circle" onclick="countZekr()">
+سبّح
+</button>
+
+<p>استمر بذكر الله ❤️</p>
+
+<button class="reset" onclick="resetZekr()">
+تصفير العداد
+</button>
+
+</div>
+</section>
+
+</div>
+
+<nav>
+<button class="active" onclick="showTab('home',this)">🏠<br>الرئيسية</button>
+<button onclick="showTab('quran',this)">📖<br>القرآن</button>
+<button onclick="showTab('duas',this)">🤲<br>الأدعية</button>
+<button onclick="showTab('adhkar',this)">🌅<br>الأذكار</button>
+<button onclick="showTab('tasbeeh',this)">📿<br>المسبحة</button>
+</nav>
+
+<script>
+
+// التنقل
+function showTab(id,btn){
+ document.querySelectorAll('section').forEach(s=>{
+  s.classList.remove('active');
+ });
+ document.getElementById(id).classList.add('active');
+
+ document.querySelectorAll('nav button').forEach(b=>{
+  b.classList.remove('active');
+ });
+
+ if(btn) btn.classList.add('active');
+ else{
+  document.querySelectorAll('nav button').forEach(b=>{
+   if(b.getAttribute('onclick').includes(id)){
+    b.classList.add('active');
+   }
+  });
+ }
+
+ window.scrollTo(0,0);
+}
+
+// التاريخ
+document.getElementById('date').textContent=
+new Intl.DateTimeFormat('ar-JO',{
+ dateStyle:'full'
+}).format(new Date());
+
+
+// مواقيت الصلاة
+async function loadPrayer(){
+ let box=document.getElementById('prayers');
+ box.textContent='جاري التحميل...';
+
+ try{
+  let response=await fetch(
+   'https://api.aladhan.com/v1/timingsByCity?city=Amman&country=Jordan&method=23'
+  );
+
+  if(!response.ok)throw Error();
+
+  let result=await response.json();
+  let times=result.data.timings;
+
+  let names={
+   Fajr:'الفجر',
+   Sunrise:'الشروق',
+   Dhuhr:'الظهر',
+   Asr:'العصر',
+   Maghrib:'المغرب',
+   Isha:'العشاء'
+  };
+
+  box.innerHTML='';
+
+  Object.keys(names).forEach(key=>{
+   let row=document.createElement('div');
+   row.className='prayer';
+
+   let name=document.createElement('span');
+   name.textContent=names[key];
+
+   let time=document.createElement('strong');
+   time.textContent=times[key];
+
+   row.append(name,time);
+   box.appendChild(row);
+  });
+
+ }catch(error){
+  box.textContent='تعذر تحميل المواقيت. تحقق من الإنترنت.';
+ }
+}
+
+loadPrayer();
+
+
+// القرآن الكريم
+let allSurahs=[];
+
+async function loadQuran(){
+ let box=document.getElementById('quranContent');
+
+ try{
+  let response=await fetch(
+   'https://api.alquran.cloud/v1/quran/quran-uthmani'
+  );
+
+  if(!response.ok)throw Error();
+
+  let result=await response.json();
+  allSurahs=result.data.surahs;
+
+  let select=document.getElementById('surahSelect');
+
+  allSurahs.forEach((surah,index)=>{
+   let option=document.createElement('option');
+   option.value=index;
+   option.textContent=surah.name;
+   select.appendChild(option);
+  });
+
+  box.textContent='اختر السورة التي تريد قراءتها.';
+
+ }catch(error){
+  box.textContent='تعذر تحميل القرآن. تأكد من الإنترنت.';
+ }
+}
+
+function loadSurah(){
+ let index=document.getElementById('surahSelect').value;
+ if(index==='')return;
+
+ let surah=allSurahs[index];
+ let box=document.getElementById('quranContent');
+
+ box.innerHTML='';
+
+ let title=document.createElement('h2');
+ title.className='surah-title';
+ title.textContent=surah.name;
+ box.appendChild(title);
+
+ if(surah.number!==1 && surah.number!==9){
+  let basmala=document.createElement('div');
+  basmala.className='ayah';
+  basmala.textContent='بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
+  box.appendChild(basmala);
+ }
+
+ surah.ayahs.forEach(ayah=>{
+  let div=document.createElement('div');
+  div.className='ayah';
+  div.textContent=ayah.text+' ۝ '+ayah.numberInSurah;
+  box.appendChild(div);
+ });
+}
+
+loadQuran();
+
+
+// الأدعية
+let duas=[
+'اللهم اغفر لي وارحمني واهدني وعافني وارزقني.',
+'ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار.',
+'اللهم إني أسألك العفو والعافية في الدنيا والآخرة.',
+'رب اشرح لي صدري ويسر لي أمري.',
+'اللهم أعني على ذكرك وشكرك وحسن عبادتك.',
+'اللهم إني أسألك علماً نافعاً ورزقاً طيباً وعملاً متقبلاً.',
+'ربنا لا تزغ قلوبنا بعد إذ هديتنا وهب لنا من لدنك رحمة.',
+'اللهم أصلح لي ديني ودنياي وآخرتي.',
+'رب اغفر لي ولوالدي وللمؤمنين يوم يقوم الحساب.'
+];
+
+let duaBox=document.getElementById('duaContent');
+
+duas.forEach(dua=>{
+ let div=document.createElement('div');
+ div.className='ayah';
+ div.textContent=dua;
+ duaBox.appendChild(div);
+});
+
+
+// الأذكار
+let adhkar={
+ morning:[
+ ['أصبحنا وأصبح الملك لله والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.',1],
+ ['رضيت بالله رباً وبالإسلام ديناً وبمحمد ﷺ نبياً.',3],
+ ['سبحان الله وبحمده.',100],
+ ['أستغفر الله وأتوب إليه.',100],
+ ['اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك النشور.',1]
+ ],
+ evening:[
+ ['أمسينا وأمسى الملك لله والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.',1],
+ ['رضيت بالله رباً وبالإسلام ديناً وبمحمد ﷺ نبياً.',3],
+ ['سبحان الله وبحمده.',100],
+ ['أستغفر الله وأتوب إليه.',100],
+ ['اللهم بك أمسينا وبك أصبحنا وبك نحيا وبك نموت وإليك المصير.',1]
+ ],
+ sleep:[
+ ['باسمك اللهم أموت وأحيا.',1],
+ ['باسمك ربي وضعت جنبي وبك أرفعه.',1],
+ ['سبحان الله.',33],
+ ['الحمد لله.',33],
+ ['الله أكبر.',34]
+ ]
+};
+
+function loadAdhkar(){
+ let type=document.getElementById('zekrType').value;
+ let box=document.getElementById('zekrContent');
+ box.innerHTML='';
+
+ adhkar[type].forEach(item=>{
+  let div=document.createElement('div');
+  div.className='zekr';
+
+  let text=document.createElement('div');
+  text.textContent=item[0];
+
+  let repeat=document.createElement('strong');
+  repeat.style.color='#e9cb7b';
+  repeat.textContent='التكرار: '+item[1];
+
+  div.append(text,repeat);
+  box.appendChild(div);
+ });
+}
+
+loadAdhkar();
+
+
+// المسبحة
+let count=Number(localStorage.getItem('noor_count'))||0;
+
+function updateCounter(){
+ document.getElementById('counter').textContent=count;
+ localStorage.setItem('noor_count',count);
+}
+
+function countZekr(){
+ count++;
+ updateCounter();
+
+ if(navigator.vibrate){
+  navigator.vibrate(25);
+ }
+}
+
+function resetZekr(){
+ count=0;
+ updateCounter();
+}
+
+function changeTasbeeh(){
+ // تغيير الذكر لا يصفر العداد
+}
+
+// عرض العداد المحفوظ
+updateCounter();
+
+</script>
+</body>
+</html>
